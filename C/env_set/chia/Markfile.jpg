@@ -1,4 +1,0 @@
-all:test.c
-   gcc	test.c -o hello
-clean:
- rm -f hello
