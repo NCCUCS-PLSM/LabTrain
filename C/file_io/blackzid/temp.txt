@@ -1,6 +1,0 @@
-NO.       Name.          PhoneNumber.
-1         Blackzid       0917283628
-2         Hen            0984736251
-4         Frank          0912312312
-3         Lio            0929292929
-5         Sai            0988223311

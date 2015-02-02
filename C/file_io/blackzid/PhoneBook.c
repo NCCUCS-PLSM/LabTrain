@@ -14,10 +14,7 @@ int Count(FILE *file);
 int main(){
 	FILE *file;
 	file = fopen("phoneBook.txt","rb+");
-	char str[8];
 	char command[LINE_SIZE];
-	//	while(fgets(str, sizeof str,file) !=NULL)
-	//		printf("%s",str);
 	system("clear");
 	printInfo();
 
@@ -194,7 +191,6 @@ int Search_in_File(FILE *file, char *str,char *type) {
 }
 void List(FILE *file){
 	char str[512];
-	int line_num = 1;
 	rewind(file);
 	while(fgets(str, sizeof str,file) !=NULL){
 		printf("%s",str);
