@@ -1,4 +1,4 @@
 main:yolin_hello.c
-	gcc yolin_hello.c -o yolin_hello
+	gcc yolin_phonebook.c -o yolin_phonebook
 clean:
-	rm -f yolin_hello
+	rm -f yolin_phonebook
