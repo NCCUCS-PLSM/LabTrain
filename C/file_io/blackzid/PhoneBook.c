@@ -205,3 +205,10 @@ int Count(FILE *file){
 	}
 	return line_num;
 }
+
+/**
+ * Check by Veck on Feb/04, 2015: OK!
+ * Advise:
+ * 1. Comment!
+ * 2. Maybe type number is better than type command, or you should hint some usage inforamtions.
+ */
