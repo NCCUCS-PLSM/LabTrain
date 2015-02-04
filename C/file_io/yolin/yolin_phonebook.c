@@ -459,8 +459,11 @@ void tel_delete(struct student *p){  //Delete contacts
  * 1. Recommand to use fflush() with scanf() instead of setbuf() and getchar().
  * 
  * Note for you:
- * 1. getchar() with input 'c' + <enter> will only get c and leave <enter> in buffer, that's why you need to add "clear = getchar();" after "choose = getchar();" to clear buffer. This somehow cannot be achieved by using "setbuf(stdin, NULL);" or "fflush(stdin);" or "fpurge(stdin);".
+ * 1. getchar() with input 'c' + <enter> will only get c and leave <enter> in buffer, 
+ * that's why you need to add "clear = getchar();" after "choose = getchar();" to clear buffer. 
+ * This somehow cannot be achieved by using "setbuf(stdin, NULL);" or "fflush(stdin);" or "fpurge(stdin);".
  *
- * 2. Since UNIX/Linux is the base and oldest development platform for C, it's the reason we demand your programs need to be successfully compiled and  executed on such platform.
+ * 2. Since UNIX/Linux is the base and oldest development platform for C, 
+ * it's the reason we demand your programs need to be successfully compiled and  executed on such platform.
  */
 
