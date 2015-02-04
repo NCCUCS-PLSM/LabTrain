@@ -1,10 +1,9 @@
 #include <stdio.h>
-//#include <conio.h>
+/*#include <conio.h>*/
 #include <string.h>
 #include <stdlib.h>
 
 #define N 100
-
 
 struct student{
 
@@ -14,7 +13,7 @@ struct student{
 
 };
 
-int scanline(char *filename){ //查看文件有幾行(有幾個連絡人)
+int scanline(char *filename){ //check out file lines(how many contacts)
     FILE *f = 0;
     char line[N]="";
     int lines = 0;
@@ -38,15 +37,18 @@ void tel_modify(struct student *p);
 void tel_add(struct student *p);
 void tel_delete(struct student *p);
 
-void main(){
+int main(){
 
-    char choose='\0',yes_no='\0';
+    char choose = '\0',yes_no = '\0';
     struct student record[N]={0};
+    setbuf(stdin,NULL);
 
     do{
         tel_print_option();
-        printf("請選擇(0-6):");
-        choose=getche();
+        printf("Options(0-6):");
+
+        setbuf(stdin,NULL);
+        choose=getchar();
 
         switch(choose){
             case '1':tel_create(record);break;
@@ -59,9 +61,10 @@ void main(){
             default :printf("\nwrong option...\n");
         }
 
-        printf("\n繼續選擇嗎(y/n)?\n");
+        printf("\nKeep Going?(y/n)\n");
         do{
-            yes_no=getch();
+            setbuf(stdin,NULL);
+            yes_no=getchar();
         } while(yes_no != 'Y' && yes_no != 'y' && yes_no != 'N' && yes_no != 'n');
 
     } while(yes_no == 'Y' || yes_no == 'y');
@@ -70,59 +73,72 @@ void main(){
 }
 
 
-void tel_print_option(){ //print出選項
+void tel_print_option(){ //print options
 
     system("cls");
-    printf(" 請輸入選項編號(0-6): \n");
-    printf("1--創建通訊錄\n");
-    printf("2--顯示通訊錄\n");
-    printf("3--搜尋通訊錄\n");
-    printf("4--修改通訊錄\n");
-    printf("5--新增連絡人\n");
-    printf("6--刪除連絡人\n");
-    printf("0--退出\n");
+    printf("Options(0-6): \n");
+    printf("1.Create phonebook\n");
+    printf("2.Print  phonebook\n");
+    printf("3.Search phonebook\n");
+    printf("4.Modify phonebook\n");
+    printf("5.Add new contacts\n");
+    printf("6.Delete contacts\n");
+    printf("0.Quit\n");
 
 }
 
 
-void tel_create(struct student *p){ //create新電話簿
+void tel_create(struct student *p){ //create new phonebook
 
     struct student *q=p;
     FILE *fp=NULL;
-
+    char tempnum[12]="",tempname[12]="",temptel[12]="";
+    system("cls");
+    setbuf(stdin,NULL);
     fp=fopen("phonebook.txt","w");
     if(fp==NULL){
         printf("error");
         return;
     }
 
-        printf("\n學號:");
-        gets(p->num);
-        printf("姓名:");
-        gets(p->name);
-        printf("電話:");
-        gets(p->tel);
-        fprintf(fp,"%12s%12s%12s\n",p->num,p->name,p->tel);
+        printf("ID number:");
+
+        fgets(p->num, 12, stdin);//gets(p->num);
+        if (p->num[strlen(p->num) - 1] == '\n')
+            p->num[strlen(p->num) - 1] = '\0';
+        printf("Name:");
+
+        fgets(p->name, 12, stdin);//gets(p->name);
+        if (p->name[strlen(p->name) - 1] == '\n')
+            p->name[strlen(p->name) - 1] = '\0';
+        printf("Tel:");
+
+        fgets(p->tel, 12, stdin);//gets(p->tel);
+        if (p->tel[strlen(p->tel) - 1] == '\n')
+            p->tel[strlen(p->tel) - 1] = '\0';
+
+        fprintf(fp,"%12s%12s%12s",p->num,p->name,p->tel);
         fclose(fp);
 
 }
 
 
-void tel_display(struct student *p){  //print出全部電話簿
+void tel_display(struct student *p){  //print all contacts
 
     FILE *fp=NULL;
     fp=fopen("phonebook.txt","r");
     int lines = 0;
     lines = scanline("phonebook.txt");
+    setbuf(stdin,NULL);
 
     if(fp==NULL){
-        printf("error / Empty file");
+        printf("Error! / Empty file!");
         return;
     }
 
     system("cls");
     //printf("%d", lines);
-    printf("        學號        姓名        電話\n");
+    printf("         ID:       Name:        Tel:\n");
 
     while(lines>0){
         fscanf(fp,"%12s%12s%12s",p->num,p->name,p->tel);
@@ -133,11 +149,12 @@ void tel_display(struct student *p){  //print出全部電話簿
 }
 
 
-void tel_search(struct student *p){     //搜尋電話簿
+void tel_search(struct student *p){     //Search phonebook
 
     struct student *q=p;
     int flag=0;
     char c='\0', nm[12]="", nam[12]="", numb[12]="";
+    setbuf(stdin,NULL);
 
     system("cls");
     tel_display(p);
@@ -148,90 +165,126 @@ void tel_search(struct student *p){     //搜尋電話簿
 
 
 
-    printf("按照學號查詢(h)或姓名查詢(m)或電話號碼查詢(b):\n");
-    c=getche();
+    printf("Search by ID(h)or Name(m)or Tel(b):\n");
+    setbuf(stdin,NULL);
+    c=getchar();
     if(c=='h'||c=='H'){
-        printf("\n請輸入要查詢記錄的學號:\n");
-        gets(nm);
+        printf("\nEnter the ID you want to search:\n");
+        setbuf(stdin,NULL);
+        fgets(nm, 12, stdin);
+        if (nm[strlen(nm) - 1] == '\n')
+            nm[strlen(nm) - 1] = '\0';//gets(nm);
 
         for(p=q;p-q<lines;p++)
             if(strcmp(nm,p->num)==0){
-                printf("        學號        姓名        電話\n");
+                printf("         ID:       Name:        Tel:\n");
                 printf("%12s%12s%12s\n",p->num,p->name,p->tel);
                 flag=1;
             }
-        if(flag==0) printf("wrong / can't find\n");
+        if(flag==0) printf("Wrong! / Can't find!\n");
     }
     else if(c=='m'||c=='M'){
-        printf("\n請輸入要查詢記錄的姓名:\n");
-        gets(nam);
+        printf("\nEnter the Name you want to search:\n");
+        setbuf(stdin,NULL);
+        fgets(nam, 12, stdin);
+        if (nam[strlen(nam) - 1] == '\n')
+            nam[strlen(nam) - 1] = '\0';//gets(nam);
+
         for(p=q;p-q<lines;p++)
             if(strcmp(nam,p->name)==0){
-                printf("        學號        姓名        電話\n");
+                printf("         ID:       Name:        Tel:\n");
                 printf("%12s%12s%12s\n",p->num,p->name,p->tel);
                 flag=1;
             }
-        if(flag==0) printf("wrong / can't find\n");
+        if(flag==0) printf("Wrong! / Can't find!\n");
     }
     else if(c=='b'||c=='B'){
-        printf("\n請輸入要查詢記錄的電話號碼:\n");
-        gets(numb);
+        printf("\nEnter the Tel you want to search:\n");
+        setbuf(stdin,NULL);
+        fgets(numb, 12, stdin);
+        if (numb[strlen(numb) - 1] == '\n')
+            numb[strlen(numb) - 1] = '\0';//gets(numb);
+
         for(p=q;p-q<lines;p++)
             if(strcmp(numb,p->tel)==0){
-                printf("        學號        姓名        電話\n");
+                printf("         ID:       Name:        Tel:\n");
                 printf("%12s%12s%12s\n",p->num,p->name,p->tel);
                 flag=1;
             }
-        if(flag==0) printf("wrong / can't find\n");
+        if(flag==0) printf("Wrong! / Can't find!\n");
     }
-    else printf("wrong option...\n");
+    else printf("Wrong option...\n");
 }
 
 
-void tel_modify(struct student *p){     //修改電話簿
+void tel_modify(struct student *p){     //Modify phonebook
     struct student *q=p;
     FILE *fp=NULL;
     char nam[12]="";
+    int check = 0;
+    int count = 0;
+    setbuf(stdin,NULL);
     tel_display(p);
 
     int lines = 0;
     lines = scanline("phonebook.txt");
 
-    printf("請輸入您想要修改記錄的姓名:\n");
-    gets(nam);
+    printf("Enter the Name you want to modify:\n");
+    setbuf(stdin,NULL);
+    fgets(nam, 12, stdin);
+    if (nam[strlen(nam) - 1] == '\n')
+        nam[strlen(nam) - 1] = '\0';//gets(nam);
 
-    for(p=q;p-q<lines;p++)
-        if(strcmp(nam,p->name)==0)
-            break;
-    if(p-q==lines)
-        printf("wrong...");
-    else{
-        printf("請輸入正確的學號:");
-        gets(p->num);
-        printf("請輸入正確的姓名:");
-        gets(p->name);
-        printf("請輸入正確的電話:");
-        gets(p->tel);
+    for(p=q;p-q<lines;p++){
+        if(p-q==lines)
+            printf("Wrong!");
+        else if(strcmp(nam,p->name)==0){
+            check = 1;
+            printf("Enter the correct ID:");
+            fgets(p->num, 12, stdin);
+            if (p->num[strlen(p->num) - 1] == '\n')
+                p->num[strlen(p->num) - 1] = '\0';//gets(p->num);
+
+            printf("Enter the correct Name:");
+            fgets(p->name, 12, stdin);
+            if (p->name[strlen(p->name) - 1] == '\n')
+                p->name[strlen(p->name) - 1] = '\0';//gets(p->name);
+
+            printf("Enter the correct Tel:");
+            fgets(p->tel, 12, stdin);
+            if (p->tel[strlen(p->tel) - 1] == '\n')
+                p->tel[strlen(p->tel) - 1] = '\0';//gets(p->tel);
+        }
+    }
+
+    if(check == 0){
+        printf("Wrong! / Can't find!\n");
     }
 
     fp=fopen("phonebook.txt","w");
     if(fp==NULL){
-        printf("error");
-        exit(0);
+        printf("Error!");
+        return;
     }
 
-    for(p=q;p-q<lines-1;p++)
-        fprintf(fp,"%12s%12s%12s\n",p->num,p->name,p->tel);
+    for(p=q;p-q<lines;p++){
+        fprintf(fp,"%12s%12s%12s",p->num,p->name,p->tel);
+        count ++;
+        if(count != lines)
+            fprintf(fp, "\n");
+    }
     fclose(fp);
 
 }
 
 
-void tel_add(struct student *p){        //新增連絡人
+void tel_add(struct student *p){        //Add new contacts
     FILE *fp=NULL;
     struct student *q=p;
     char c='\n',tempnum[12]="",tempname[12]="",temptel[12]="";
     int count = 0;
+    int add = 0;
+    setbuf(stdin,NULL);
 
     int lines = 0;
     lines = scanline("phonebook.txt");
@@ -241,57 +294,76 @@ void tel_add(struct student *p){        //新增連絡人
     tel_display(p);
 
     do{
-        printf("請輸入新紀錄的學號:");
-        gets(tempnum);
-        printf("請輸入新紀錄的姓名:");
-        gets(tempname);
-        printf("請輸入新紀錄的電話:");
-        gets(temptel);
+        printf("Enter the new ID:");
+        setbuf(stdin,NULL);
+        fgets(tempnum, 12, stdin);
+        if (tempnum[strlen(tempnum) - 1] == '\n')
+            tempnum[strlen(tempnum) - 1] = '\0';//gets(tempnum);
 
-        for(p=q;p-q<lines;p++)
-            if(strcmp(temptel,p->tel)==0 || strcmp(tempnum,p->num)==0){
-                printf("學號或電話號碼重覆需要重新輸入嗎(Y/N)?");
-                c=getche();
+        printf("Enter the new Name:");
+
+        fgets(tempname, 12, stdin);
+        if (tempname[strlen(tempname) - 1] == '\n')
+            tempname[strlen(tempname) - 1] = '\0';//gets(tempname);
+
+        printf("Enter the new Tel:");
+
+        fgets(temptel, 12, stdin);
+        if (temptel[strlen(temptel) - 1] == '\n')
+            temptel[strlen(temptel) - 1] = '\0';//gets(temptel);
+
+        for(p=q;p-q<=lines;p++){
+            if(strcmp(temptel,p->tel)==0 || strcmp(tempname,p->name)==0 || strcmp(tempnum,p->num)==0){
+                printf("The ID or Name or Tel you entered is repeated.\nDo you want to enter it again?(y/n)?");
+                setbuf(stdin,NULL);
+                c=getchar();
                 putchar('\n');
                 break;
             }
-
-        if(p-q==lines){
-            strcpy(p->num,tempnum);
-            strcpy(p->name,tempname);
-            strcpy(p->tel,temptel);
-
-            fp=fopen("phonebook.txt","w");
-            if(fp==NULL){
-                printf("error");
-                return;
+            if(p-q==lines){
+                strcpy(p->num,tempnum);
+                strcpy(p->name,tempname);
+                strcpy(p->tel,temptel);
+                add = 1;
+                c='\n';
+                printf("Add success!");
+                break;
             }
-
-            for(p=q;p-q<=lines;p++){
-                fprintf(fp,"%12s%12s%12s",p->num,p->name,p->tel);
-                count ++;
-                if(count != lines+1)
-                    fprintf(fp, "\n");
-            }
-            fclose(fp);
-
-            printf("新增成功 ");
         }
     }while(c=='y'||c=='Y');
+
+
+    if(add == 1){
+        fp=fopen("phonebook.txt","w");
+        if(fp==NULL){
+            printf("Error!");
+            return;
+        }
+
+        for(p=q;p-q<=lines;p++){
+            fprintf(fp,"%12s%12s%12s",p->num,p->name,p->tel);
+            count ++;
+            if(count != lines+1)
+                fprintf(fp, "\n");
+        }
+    }
+    fclose(fp);
 
 }
 
 
-void tel_delete(struct student *p){  //刪除連絡人
+void tel_delete(struct student *p){  //Delete contacts
         FILE *fp=NULL;
         struct student *q=p;
         char c[12]="",tempnum[12]="",tempname[12]="",temptel[12]="",choose='\0';
         int count = 0;
+        setbuf(stdin,NULL);
 
         tel_display(p);
 
-        printf("\n選擇刪除記錄的方式: 學號(h)姓名(m):");
-        choose=getche();
+        printf("\nChoose the way you delete the contacts: ID(h) or Name(m):");
+        setbuf(stdin,NULL);
+        choose=getchar();
         printf("\n");
 
         int lines = 0;
@@ -299,8 +371,9 @@ void tel_delete(struct student *p){  //刪除連絡人
 
 
         if(choose=='m'||choose=='M'){
-            printf("刪除的記錄:");
-            gets(c);
+            printf("The Name you want to delete:");
+            setbuf(stdin,NULL);
+            scanf("%s", &c);//gets(c);
             for(p=q;p-q<lines;p++)
                 if(strcmp(c,p->name)==0){
                     for(;p-q<lines-1;p++){
@@ -316,27 +389,28 @@ void tel_delete(struct student *p){  //刪除連絡人
                     fp=fopen("phonebook.txt","w");
 
                     if(fp==NULL){
-                        printf("error");
+                        printf("Error!");
                         return;
                     }
 
                     for(p=q;p-q<lines-1;p++){
                         fprintf(fp,"%12s%12s%12s",p->num,p->name,p->tel);
                         count ++;
-                    if(count != lines-1)
-                        fprintf(fp, "\n");
+                        if(count != lines-1)
+                            fprintf(fp, "\n");
                     }
                     fclose(fp);
 
-                    printf("刪除成功 ");
+                    printf("Delete success!");
 
                 }
                 else
-                    printf("can't find\n");
+                    printf("Can't find\n");
         }
         else if(choose=='h'||choose=='H'){
-            printf("刪除的記錄:");
-            gets(c);
+            printf("The ID you want to delete:");
+            setbuf(stdin,NULL);
+            scanf("%s", &c);//gets(c);
             for(p=q;p-q<lines;p++)
                 if(strcmp(c,p->num)==0){
                     for(;p-q<lines-1;p++){
@@ -352,24 +426,24 @@ void tel_delete(struct student *p){  //刪除連絡人
                     fp=fopen("phonebook.txt","w");
 
                     if(fp==NULL){
-                        printf("error");
+                        printf("Error!");
                         return;
                     }
 
                     for(p=q;p-q<lines-1;p++){
                         fprintf(fp,"%12s%12s%12s",p->num,p->name,p->tel);
                         count ++;
-                    if(count != lines-1)
-                        fprintf(fp, "\n");
+                        if(count != lines-1)
+                            fprintf(fp, "\n");
                     }
                     fclose(fp);
 
-                    printf("刪除成功 ");
+                    printf("Delete success!");
                 }
                 else
-                    printf("can't find\n");
+                    printf("Can't find!\n");
         }
-        else printf("wrong\n");
+        else printf("Wrong!\n");
 }
 
 
