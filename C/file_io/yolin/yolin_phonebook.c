@@ -1,5 +1,5 @@
 #include <stdio.h>
-/*#include <conio.h>*/
+//#include <conio.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -39,7 +39,7 @@ void tel_delete(struct student *p);
 
 int main(){
 
-    char choose = '\0',yes_no = '\0';
+    char choose = '\0',yes_no = '\0', clear;
     struct student record[N]={0};
     setbuf(stdin,NULL);
 
@@ -48,7 +48,8 @@ int main(){
         printf("Options(0-6):");
 
         setbuf(stdin,NULL);
-        choose=getchar();
+        choose = getchar();
+        clear = getchar();
 
         switch(choose){
             case '1':tel_create(record);break;
@@ -64,7 +65,9 @@ int main(){
         printf("\nKeep Going?(y/n)\n");
         do{
             setbuf(stdin,NULL);
-            yes_no=getchar();
+            yes_no = getchar();
+            clear = getchar();
+
         } while(yes_no != 'Y' && yes_no != 'y' && yes_no != 'N' && yes_no != 'n');
 
     } while(yes_no == 'Y' || yes_no == 'y');
@@ -75,7 +78,7 @@ int main(){
 
 void tel_print_option(){ //print options
 
-    system("cls");
+    system("clear");
     printf("Options(0-6): \n");
     printf("1.Create phonebook\n");
     printf("2.Print  phonebook\n");
@@ -93,7 +96,7 @@ void tel_create(struct student *p){ //create new phonebook
     struct student *q=p;
     FILE *fp=NULL;
     char tempnum[12]="",tempname[12]="",temptel[12]="";
-    system("cls");
+    system("clear");
     setbuf(stdin,NULL);
     fp=fopen("phonebook.txt","w");
     if(fp==NULL){
@@ -136,7 +139,7 @@ void tel_display(struct student *p){  //print all contacts
         return;
     }
 
-    system("cls");
+    system("clear");
     //printf("%d", lines);
     printf("         ID:       Name:        Tel:\n");
 
@@ -153,10 +156,10 @@ void tel_search(struct student *p){     //Search phonebook
 
     struct student *q=p;
     int flag=0;
-    char c='\0', nm[12]="", nam[12]="", numb[12]="";
+    char c='\0', nm[12]="", nam[12]="", numb[12]="", clear;
     setbuf(stdin,NULL);
 
-    system("cls");
+    system("clear");
     tel_display(p);
 
     int lines = 0;
@@ -168,6 +171,7 @@ void tel_search(struct student *p){     //Search phonebook
     printf("Search by ID(h)or Name(m)or Tel(b):\n");
     setbuf(stdin,NULL);
     c=getchar();
+    clear = getchar();
     if(c=='h'||c=='H'){
         printf("\nEnter the ID you want to search:\n");
         setbuf(stdin,NULL);
@@ -281,7 +285,7 @@ void tel_modify(struct student *p){     //Modify phonebook
 void tel_add(struct student *p){        //Add new contacts
     FILE *fp=NULL;
     struct student *q=p;
-    char c='\n',tempnum[12]="",tempname[12]="",temptel[12]="";
+    char c='\n',tempnum[12]="",tempname[12]="",temptel[12]="", clear;
     int count = 0;
     int add = 0;
     setbuf(stdin,NULL);
@@ -317,6 +321,7 @@ void tel_add(struct student *p){        //Add new contacts
                 printf("The ID or Name or Tel you entered is repeated.\nDo you want to enter it again?(y/n)?");
                 setbuf(stdin,NULL);
                 c=getchar();
+                clear = getchar();
                 putchar('\n');
                 break;
             }
@@ -355,7 +360,7 @@ void tel_add(struct student *p){        //Add new contacts
 void tel_delete(struct student *p){  //Delete contacts
         FILE *fp=NULL;
         struct student *q=p;
-        char c[12]="",tempnum[12]="",tempname[12]="",temptel[12]="",choose='\0';
+        char c[12]="",tempnum[12]="",tempname[12]="",temptel[12]="",choose='\0', clear;
         int count = 0;
         setbuf(stdin,NULL);
 
@@ -364,6 +369,7 @@ void tel_delete(struct student *p){  //Delete contacts
         printf("\nChoose the way you delete the contacts: ID(h) or Name(m):");
         setbuf(stdin,NULL);
         choose=getchar();
+        clear = getchar();
         printf("\n");
 
         int lines = 0;
