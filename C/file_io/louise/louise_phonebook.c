@@ -247,3 +247,8 @@
     } 
 
 
+/**
+ * Check by Veck on Feb/04, 2015: OK!
+ * Advise:
+ * 1. Recommand don't use Chinese in terminal program or you should make sure encoding.
+ */
