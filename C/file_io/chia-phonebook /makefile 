@@ -1,0 +1,4 @@
+all:phonebook.c
+	gcc phonebook.c -o phonebook
+clean:
+	rm -f phonebook
