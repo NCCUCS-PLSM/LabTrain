@@ -155,4 +155,8 @@ void delete(FILE *f,int line){
 	f = fopen("book.txt","rb+");
 }
 
-
+/**
+ * Check by Veck on Feb/05, 2015: OK!
+ * Advise:
+ * 1. Maybe type number is better than type command.
+ *
