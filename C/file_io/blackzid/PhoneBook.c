@@ -2,7 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #define LINE_SIZE 64
-#define COMMAND_SIZE 6
+#define CREATE 1
+#define UPDATE 2
+#define DELETE 3
+#define SEARCH 4
+#define SHOW 5
+#define EXIT 6
 void printInfo();
 void warning1();
 void Delete_Line(FILE *file, int line);
@@ -14,42 +19,65 @@ int Count(FILE *file);
 int main(){
 	FILE *file;
 	file = fopen("phoneBook.txt","rb+");
-	char command[LINE_SIZE];
+	int command;
 	system("clear");
 	printInfo();
 
-	while(fgets(command,LINE_SIZE,stdin)){
+	while(scanf("%d",&command)!=EOF){
 		system("clear");
-		char *com = strtok(command," \n");
-		if(strcmp(com,"Create")==0){
-			char *name = strtok(NULL," \n");
-			char *number = strtok(NULL," \n");
+		if(command== CREATE ){
+			char name[20];
+			char number[20];
+			printf("Please enter name:");
+			scanf("%s",name);
+			printf("\nPlease enter number:");
+			scanf("%s",number);
+			printf("\n");
+
 			int new = Count(file);
 			fseek (file, 0, SEEK_END);
 			fprintf(file,"%-10d%-15s%-10s\n",new+1,name,number);
-		 	List(file);
+			List(file);
 		}
-		else if(strcmp(com,"Update")==0){
-			char *n=strtok(NULL," \n");
-			char *name=strtok(NULL," \n");
-			char *number=strtok(NULL," \n");
-			int l = Search_Line(file,n);
-			Update_Line(file,l,name,number);
+		else if(command== UPDATE){
+			char number[20];
+			char name[20];
+			char L[5];
+			printf("Enter the NO. you want to update:");
+			scanf("%s",L);
+			int l = Search_Line(file,L);
+			if(l!=0){
+				printf("\nPlease enter name:");
+				scanf("%s",name);
+				printf("\nPlease enter number:");
+				scanf("%s",number);
+				printf("\n");
+
+				Update_Line(file,l,name,number);
+			}
 		}
-		else if(strcmp(com,"Delete")==0){
-			char *line=strtok(NULL," \n");
+		else if(command== DELETE){
+			char line[5];
+			printf("Enter the NO. you want to delete:");
+			scanf("%s",line);
+			printf("\n");
+
 			int l = Search_Line(file,line);
 			Delete_Line(file,l);
 		}
-		else if(strcmp(com,"Search")==0){
-			char *content=strtok(NULL," \n");
-			char *type=strtok(NULL," \n");
+		else if(command== SEARCH){
+			char content[20];
+			char type[20];
+			printf("Please enter the keyword:");
+			scanf("%s",content);
+			printf("\nPlease enter the search type(NO./Nmae/Number/all).");
+			scanf("%s",type);
 			Search_in_File(file,content,type);
 		}
-		else if(strcmp(com,"exit") == 0){
+		else if(command== EXIT){
 			return 0;		 
 		}
-		else if(strcmp(com,"List") == 0){
+		else if(command== SHOW){
 			List(file);
 		}
 		else{
@@ -61,10 +89,10 @@ int main(){
 	return 0;
 }
 void printInfo(){
-	printf("\nThere are some functions you can use.\n1. Create [Name] [Number]\n2. Update [NO.] [Name] [Number]\n3. Delete [NO.]\n4. Search [content] [type] (type can be \"NO.\", \"Name\", \"PhoneNumber\" or blank to search whole file.)\n5. List\n6. exit\n:");
+	printf("\nThere are some functions you can use.\n1. Create\n2. Update\n3. Delete\n4. Search\n5. List\n6. exit\n:");
 }
 void warning1(){
-	printf("unrecognized function");
+	printf("Usage : Please enter Number 1 to 6.");
 }
 void Delete_Line(FILE *file ,int line){
 	if(line != 0){	
@@ -108,7 +136,7 @@ void Update_Line(FILE *file, int line, char *name, char *number){
 				fprintf(tmp,"%s",ch);
 			}
 			else if(temp == line){
-			 	 fprintf(tmp,"%-10d%-15s%-10s\n",line-1,name,number);
+				fprintf(tmp,"%-10d%-15s%-10s\n",line-1,name,number);
 			}
 			else if(temp >line){
 				char *n = strtok(ch," \n");
@@ -158,7 +186,7 @@ int Search_in_File(FILE *file, char *str,char *type) {
 		char *n = strtok(line," \n");
 		char *name = strtok(NULL," \n");
 		char *number = strtok(NULL," \n");
-		if(type == NULL){
+		if(strcmp(type,"all")==0){
 			if((strstr(temp, str)) != NULL) {
 				printf("%s", temp);
 				find_result++;
