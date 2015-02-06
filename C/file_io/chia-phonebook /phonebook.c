@@ -261,3 +261,10 @@ phone_record *get_record() {
 
   return rec;
 }
+
+/**
+ * Check by Veck on Feb/06, 2015
+ * Advise:
+ * 1. Recommand don't use Chinese in terminal program or you should make sure encoding.
+ * 2. UI layout could be prettier.
+ */
