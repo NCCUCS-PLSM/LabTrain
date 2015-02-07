@@ -1,7 +1,7 @@
 
 #C Practice II - File I/O & CRUD
 
-This practice is meant to practice data processing and file manipulation.
+This practice is meant to practice data processing(CRUD) and file manipulation(file open, read, write, and close).
 
 1. 請寫一個電話簿程式，至少包含 <id, name, phone> 三個欄位
 2. 能夠開啟、讀取、寫入一個檔案(檔名自定)，作為電話簿資料庫
