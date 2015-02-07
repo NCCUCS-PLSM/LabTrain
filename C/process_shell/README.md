@@ -47,11 +47,11 @@ This practice has following objective:
 	Shell 的指令分成 builtin command 和 external command：
 	
 	* Builtin command: 又稱為 internal command，顧名思義，就是和 shell 主程式寫在一起的命令(寫在 shell.c 或在 shell.c 中 include 一起編譯)，exit 和 cd 就是兩個典型的 builtin command，exit 就跟程式碼中呼叫 exit(1) 一樣，會把 process 自己砍掉，cd 等等會說會什麼是。
-	* 後者則是利用 exec*() (標準 C 定義了 6 種不同執行外部程式的 exec 函式)，來執行外部程式，ls 就是一個外部程式，shell 會呼叫 ls 這個程式，ls 中大概就是用到了標準 C 中 dirent.h 的 opendir()、readdir() 和 closedir()。
+	* External command: 是利用 exec*() (標準 C 定義了 6 種不同執行外部程式的 exec 函式)，來執行外部程式，ls 就是一個外部程式，shell 會呼叫 ls 這個程式，ls 中大概就是用到了標準 C 中 dirent.h 的 opendir()、readdir() 和 closedir()。
 		
 	當 shell 接收到使用者輸入，判斷是要執行外部指令時，shell 就會呼叫 fork() 產生一個新的 process 去呼叫 exec\*() 來執行外部指令，為什麼要用到 fork() 呢？因為當程式呼叫了 exec\*() 成功後，這個程式的記憶體空間就會被新的(你用 exec\*() 執行的程式的) process 給取代了，如果是由 shell 自己的 process 呼叫 exec*()，那一執行完外部指令你就沒辦法再做其他事情了，這在 UNIX 或 server 版本的 Linux 而言可是只能重開機的悲劇。
 
-	為什麼要分成內建指令和外部指令牽涉到了 Process 的管理，簡單來說就是每個程式執行以後的 process 會有自己的記憶體空間，這個記憶體空間記錄的程式執行的基本資訊，例如『所在目錄』(例如你在 Desktop 執行一個 phonebook 的程式，執行以後 OS 會在 phonebook 的記憶體空間記錄他的位置在 `\User\<name>\Desktop`)，試想如果 cd 指令做成外部命令，那麼 shell 執行 cd 以後，因為會進行所在位置改寫的程式是 cd 不是 shell，因此 OS 改變的只是 cd 的位置，你用 pwd 看就會發現怎麼還是在同一個目錄下，還有就是像 exit 這個指令是用來終結 process，如果呼叫一個外部程式叫做 exit，exit 會呼叫 exit()，那就只是把 exit 這個程式的 process 砍掉，shell 還在。
+	為什麼要分成內建指令和外部指令牽涉到了 Process 的管理，簡單來說就是每個程式執行以後的 process 會有自己的記憶體空間，這個記憶體空間記錄著程式執行的基本資訊，例如『所在目錄』(例如你在 Desktop 執行一個 phonebook 的程式，執行以後 OS 會在 phonebook 的記憶體空間記錄他的位置在 `\User\<name>\Desktop`)，試想如果 cd 指令做成外部命令，那麼 shell 執行 cd 以後，因為會進行所在位置改寫的程式是 cd 不是 shell，因此 OS 改變的只是 cd 的位置，你用 pwd 看就會發現怎麼還是在同一個目錄下，還有就是像 exit 這個指令是用來終結 process，如果呼叫一個外部程式叫做 exit，exit 會呼叫 exit()，那就只是把 exit 這個程式的 process 砍掉，shell 還在。
 	
 	至於 ls 這個指令好像可以也做成 builtin command，此時就要思考『盡可能做成外部指令』的問題了，因為如果『好像做成內外部指令都可以』的指令都做成內部指令，則一來 shell 程式碼可能會很長(如果你試著寫 ls 的完整功能，會發現其實要考慮的 case 很多很複雜)，另一方面是如果你正在用 shell，但是你修改了 ls 的程式碼，就必須將整個 shell.c 重新編譯過一遍，浪費不必要的時間，因此在決定哪些指令要做成內建指令時，是採取『盡可能做成外部指令』的思考方向。
 	
