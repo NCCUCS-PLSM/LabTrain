@@ -62,7 +62,7 @@ This practice has following objective:
 	
 
 #Assignments and Requirements
-1. 請實作一個簡單的 shell 和兩個內建指令 (不能使用 system() 去執行這兩個指令)
+1. 請實作一個簡單的 shell 和一個內建指令 (不能使用 system() 去執行這兩個指令)
 	* find - 在指定的檔案或資料夾中所有的檔案尋找關鍵字
 
 	```
