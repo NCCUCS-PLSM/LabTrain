@@ -19,7 +19,7 @@ int main(){
 			char *keyword= strtok(NULL," \n");
 			char *target = strtok(NULL," \n");
 			if(stat(target,&s) == 0){
-				if( s.st_mode & S_IFDIR ) /*it's a directory*/
+				if(S_ISDIR(s.st_mode)) /*it's a directory*/
 				{
 					if ((dirp = opendir(target)) == NULL) { /*open directory*/
 						printf("couldn't open %s\n",target);
@@ -31,7 +31,7 @@ int main(){
 						}
 					}while(dp != NULL);			 
 				}
-				else if( s.st_mode & S_IFREG ) /*it's a file */
+				else if(S_ISREG(s.st_mode)) /*it's a file */
 				{
 					Search_in_File(target,keyword);
 				}
@@ -40,13 +40,14 @@ int main(){
             {
 				printf("no such file or directory\n");
 			}
+			printHead();
 		}
 		else if(strncmp(input,"exit\n",5)==0){
 			return 0;
 		}
 		else{  /*implement other func*/
 			pid_t pid = fork();
-			if(pid == -1){ //error*/
+			if(pid == -1){ /*error*/
 				printf("fork failed");
 			}			
 			else if(pid == 0){ /* child process*/
