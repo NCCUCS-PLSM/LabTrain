@@ -15,7 +15,7 @@ int main(){
 	printHead();
 	while(fgets(input,256,stdin)){ /* get user command */
 		if(strncmp(input,"find ",5)==0){ /* find func*/
-			char *find = strtok(input," \n");
+			strtok(input," \n");
 			char *keyword= strtok(NULL," \n");
 			char *target = strtok(NULL," \n");
 			if(stat(target,&s) == 0){
@@ -37,7 +37,7 @@ int main(){
 				}
 			}
 			else/* no such file or directory*/
-            {
+			{
 				printf("no such file or directory\n");
 			}
 			printHead();
@@ -51,19 +51,19 @@ int main(){
 				printf("fork failed");
 			}			
 			else if(pid == 0){ /* child process*/
-				char str[128],str2[128];
+				char str[128];
 				strcpy(str,input);
 				char *command = strtok(input," \n");
- 	  	  	  	int i = 1;
+				int i = 1;
 				char *args[10];
 				char *temp;
 				args[0] = command;
 				do{
 					temp = strtok(NULL," \n");
-			 	   	args[i]=temp;
+					args[i]=temp;
 					i++;		
 				}while(temp !=NULL);
- 	  	  	  	args[i]=NULL;
+				args[i]=NULL;
 				printf("arg1:%s,arg2:%s",args[0],args[1]);
 				execvp(command,args);
 				printf("command not found\n");/*should not run this*/

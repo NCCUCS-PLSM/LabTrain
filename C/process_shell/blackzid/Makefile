@@ -2,7 +2,7 @@ OBJ = Bsh.c
 TARGET = Bsh
 
 CC = gcc
-CFLAGS = -ansi 
+CFLAGS = -ansi -Wall
 
 all:$(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) -o  $(TARGET)
