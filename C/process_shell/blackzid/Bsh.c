@@ -5,51 +5,51 @@
 #include <sys/stat.h>
 #include <unistd.h> 
 #include <string.h>
-void printHead(); //print shell head
-int Search_in_File(char *file, char*str);// search keyword in given file
+void printHead(); /*print shell head*/
+int Search_in_File(char *file, char*str);/* search keyword in given file*/
 struct stat s; 
 int main(){
 	DIR *dirp;
 	struct dirent *dp;
 	char input[256];
 	printHead();
-	while(fgets(input,256,stdin)){ // get user command
-		if(strncmp(input,"find ",5)==0){ // find func
+	while(fgets(input,256,stdin)){ /* get user command */
+		if(strncmp(input,"find ",5)==0){ /* find func*/
 			char *find = strtok(input," \n");
 			char *keyword= strtok(NULL," \n");
 			char *target = strtok(NULL," \n");
 			if(stat(target,&s) == 0){
-				if( s.st_mode & S_IFDIR ) //it's a directory
+				if( s.st_mode & S_IFDIR ) /*it's a directory*/
 				{
-					if ((dirp = opendir(target)) == NULL) { //open directory
+					if ((dirp = opendir(target)) == NULL) { /*open directory*/
 						printf("couldn't open %s\n",target);
 						return 0;
 					}
-					do{  //search keyword in each file
+					do{  /*search keyword in each file*/
 						if ((dp = readdir(dirp)) != NULL) {
 							Search_in_File(dp->d_name,keyword);
 						}
 					}while(dp != NULL);			 
 				}
-				else if( s.st_mode & S_IFREG ) //it's a file 
+				else if( s.st_mode & S_IFREG ) /*it's a file */
 				{
 					Search_in_File(target,keyword);
 				}
 			}
-			else// no such file or directory
-			{
+			else/* no such file or directory*/
+            {
 				printf("no such file or directory\n");
 			}
 		}
 		else if(strncmp(input,"exit\n",5)==0){
 			return 0;
 		}
-		else{  //implement other func
+		else{  /*implement other func*/
 			pid_t pid = fork();
-			if(pid == -1){ //error
+			if(pid == -1){ //error*/
 				printf("fork failed");
 			}			
-			else if(pid == 0){ // child process
+			else if(pid == 0){ /* child process*/
 				char str[128],str2[128];
 				strcpy(str,input);
 				char *command = strtok(input," \n");
@@ -65,11 +65,11 @@ int main(){
  	  	  	  	args[i]=NULL;
 				printf("arg1:%s,arg2:%s",args[0],args[1]);
 				execvp(command,args);
-				printf("command not found\n");//should not run this
+				printf("command not found\n");/*should not run this*/
 			}
-			else{ //parent process
+			else{ /*parent process*/
 				int returnStatus;    
-				waitpid(pid, &returnStatus, 0);  //wait child process finish
+				waitpid(pid, &returnStatus, 0);  /*wait child process finish*/
 				if(returnStatus == 0)
 					printHead();	
 				else
@@ -87,7 +87,7 @@ int Search_in_File(char *file, char *str) {
 	int line_num = 1;
 	char temp[512];
 	while(fgets(temp,512,fp)!=NULL) {  
-		// get every line and compare 
+		/* get every line and compare */
 		char *pfound = strstr(temp, str); 
 		if(pfound != NULL) {  
 			int dposfound = (int)(pfound - temp);
