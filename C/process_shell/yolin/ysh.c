@@ -87,3 +87,10 @@ int main(int argc, char *argv[], char *envp[]){
     }    
     return 0;
 }
+
+/** 
+ * Check by Veck on Feb/23, 2015: OK!
+ * 1. 基本功能有了，不過有個小 Bug，當我輸入『find world .』後，並沒有檢查目錄下所有檔案中有 world 的檔案
+ *	  應該使用 DIR 資料型態的元素來實作目錄的檢查和操作，然後再對檔案做內容的檢查
+ * 2. 實作 parse_args 是個不錯的想法！
+ */

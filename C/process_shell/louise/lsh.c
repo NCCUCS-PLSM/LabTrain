@@ -48,20 +48,28 @@ while (!feof(stdin)) {
                 strcpy(cmndbuf, "clear");
             
             } else if (!strcmp(args[0],"find")) {  // "find" command
-		if(args[1]==NULL || args[2]==NULL) {
-			//err = "Usage: find keyword target\n";
-			//execlp("echo", "echo", err, NULL);
-			printf("Usage: find keyword target\n");
-		} else	
-		{
-		strcpy(cmndbuf, "grep -R --color "); 
-		if (!args[1])
-		    args[1] = " ";
-		strcat(cmndbuf, args[1]);
-		if (!args[2])
-                    args[2] = ". ";         // if no arg set current directory
-                strcat(cmndbuf, args[2]);
-		} 
+        		if(args[1]==NULL || args[2]==NULL) {
+        			//err = "Usage: find keyword target\n";
+        			//execlp("echo", "echo", err, NULL);
+        			printf("Usage: find keyword target\n");
+        		} else {
+        		  strcpy(cmndbuf, "grep -R --color "); 
+        		  if (!args[1])
+        		    args[1] = " ";
+        		  strcat(cmndbuf, args[1]);
+
+                  /*
+                   * 少家這行的話：
+                   * (O-O) find hello .
+                   * grep -R --color hello.
+                   * 導致：grep: warning: recursive search of stdin
+                   */
+                  strcat(cmndbuf, " ");
+
+        		  if (!args[2])
+                    args[2] = ". ";   // if no arg set current directory
+                  strcat(cmndbuf, args[2]);         
+        		} 
             } else if (strcmp(args[0], "exit") == 0) {  // "exit" command
                 break;
             } else {                         // pass command on to OS shell
@@ -82,3 +90,15 @@ while (!feof(stdin)) {
 }
 return 0; 
 }
+
+/**
+ * Check by Veck on Feb/23, 2015.
+ * 1. 有多做 clr 很好!
+      不過作法跟要求的不太一樣，『不能使用 system() 去執行』的意思是，妳必須自己實作 find 的功能
+ *    例如當使用者輸入 find hello hello.txt 後，妳的要去檢查目前這個目錄下有沒有 hello.txt 
+ *    沒有的話印出『hello.txt: No such file or directory』的訊息；有的話才去看內容
+ * 2. 妳有練習到 fork, exec 很棒!
+ *    但是『你個程式要能夠執行其他原本 shell 可以執行的命令或功能，請另外寫一個 hello_world.c』不是這個意思
+ *    而是妳的 lsh 要能夠執行其他 shell 的功能(例如妳編譯出來的 hello)
+ *    執行方式是在 lsh 中去呼叫 fork 來產生子行程，再由子行程去呼叫 exec 來執行 hello 這支程式
+ */

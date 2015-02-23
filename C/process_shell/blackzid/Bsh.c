@@ -100,3 +100,7 @@ int Search_in_File(char *file, char *str) {
 	fclose(fp);
 	return(0);
 }
+
+/** 
+ * Check by Veck on Feb/23, 2015: OK! (and excellent)
+ */
